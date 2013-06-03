@@ -137,20 +137,20 @@ EOT
 
     public function installProject(IOInterface $io, $config, $packageName, $directory = null, $packageVersion = null, $stability = 'stable', $preferSource = false, $preferDist = false, $installDevPackages = false, $repositoryUrl = null, $disableCustomInstallers = false, $noScripts = false, $keepVcs = false, $noProgress = false)
     {
-        // install dependencies of the created project
-        $composer = Factory::create($io);
-
         if ($packageName !== null) {
             $installedFromVcs = $this->installRootPackage($io, $config, $packageName, $directory, $packageVersion, $stability, $preferSource, $preferDist, $installDevPackages, $repositoryUrl, $disableCustomInstallers, $noScripts, $keepVcs, $noProgress);
         } else {
             $installedFromVcs = false;
         }
 
+        $composer = Factory::create($io);
+
         if ($noScripts === false) {
             // dispatch event
             $composer->getEventDispatcher()->dispatchCommandEvent(ScriptEvents::POST_ROOT_PACKAGE_INSTALL, $installDevPackages);
         }
 
+        // install dependencies of the created project
         $installer = Installer::create($io, $composer);
         $installer->setPreferSource($preferSource)
             ->setPreferDist($preferDist)
